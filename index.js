@@ -55,9 +55,9 @@ const getDepartmentNames = async () => {
 }
 
 // Given the name of the department, what is its id?
-const getDepartmentId = async (departmentName) => {
-      let query = "SELECT * FROM department WHERE department.name=?";
-      let args = [departmentName];
+const getDepartmentId = async (name) => {
+      let query = "SELECT * FROM department WHERE name=?";
+      let args = [name];
       const rows = await db.query(query, args);
       return rows[0].id;
 }
@@ -161,6 +161,16 @@ const updateEmployeeRole = async (employeeInfo) => {
       console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
 }
 
+const viewAllEmployeesByDepartment2 = async () => {
+      const departmentChoice = await getEmployeesByDept();
+      const deptID = await getDepartmentId(departmentChoice)
+      let query = "SELECT first_name as 'First Name', last_name as 'Last Name', department.name as 'Department' FROM employee INNER JOIN role ON role_id = role.id INNER JOIN department ON department_id = department.id WHERE department.id = ?;";
+      let args = [deptID];
+      const rows = await db.query(query, args);
+      console.table(rows);
+
+}
+
 const updateEmployeeManager = async (employeeInfo) => {
       //Given the name of the manager, what is the manager id? 
       //Given the full name of the employee, what is their first and last name? 
@@ -233,6 +243,7 @@ const mainPrompt = () => {
                               "Update employee manager",
                               "View all departments",
                               "View all employees",
+                              "View all employees grouped by department",
                               "View all employees by department",
                               "View all roles",
                               "Exit"
@@ -357,6 +368,22 @@ const getUpdateEmployeeRoleInfo = async () => {
 
 }
 
+const getEmployeesByDept = async () => {
+      const department = await getDepartmentNames()
+      return inquirer
+            .prompt([
+                  {
+                        type: "list",
+                        message: "Which department would you like to see all employees for?",
+                        name: "departmentName",
+                        choices: [
+                              //populate from db
+                              ...department
+                        ]
+                  }
+            ])
+}
+
 const getUpdateEmployeeManagerInfo = async () => {
       const employees = await getEmployeeNames();
       const managers = await getManagerNames();
@@ -438,9 +465,14 @@ const main = async () => {
                         break;
                   }
 
-                  case 'View all employees by department': {
+                  case 'View all employees grouped by department': {
                         await viewAllEmployeesByDepartment();
                         break;
+                  }
+
+                  case 'View all employees by department': {
+                        await viewAllEmployeesByDepartment2();
+                        break
                   }
 
                   case 'View all roles': {
