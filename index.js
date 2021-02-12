@@ -113,7 +113,7 @@ const viewAllEmployees = async () => {
       console.log("");
 
       // SELECT * FROM employee;
-      let query = "SELECT employee.id as 'ID', employee.first_name as 'First Name', employee.last_name as 'Last Name', role.title as 'Position', department.name as 'Department', role.salary as 'Salary', (SELECT CONCAT(employee.first_name, ' ', employee.last_name) FROM employee WHERE employee.manager_id = employee.role_id) as 'Manager' FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id;";
+      let query = "SELECT employee.id as 'ID', employee.first_name as 'First Name', employee.last_name as 'Last Name', role.title as 'Position', department.name as 'Department', role.salary as 'Salary', CONCAT(m.first_name, ' ', m.last_name) as 'Manager' FROM employee LEFT JOIN employee m ON m.id = employee.manager_id JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id;";
       const rows = await db.query(query);
       console.table(rows);
 }
