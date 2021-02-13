@@ -41,6 +41,6 @@ Then you can use arrow keys to navigate and use the application.
 ## Demo
 ---
 Here is a GIF demoing the application: 
-!["Gif showing the application"]('/assets/EMS DEMO 1080p.gif')
+!["Gif showing the application"]('./assets/EMS DEMO 1080p.gif')
 
 Here is a more detailed youtube video showing the application: [Video](https://youtu.be/ZvdUdVixlFk)
