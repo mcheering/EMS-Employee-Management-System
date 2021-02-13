@@ -56,7 +56,7 @@ const getDepartmentNames = async () => {
 
 // Given the name of the department, what is its id?
 const getDepartmentId = async (name) => {
-      let query = "SELECT * FROM department WHERE name=?";
+      let query = "SELECT id FROM department WHERE name=?";
       let args = [name];
       const rows = await db.query(query, args);
       return rows[0].id;
@@ -122,7 +122,7 @@ const viewAllEmployeesByDepartment = async () => {
       // View all employees by department
       // SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);
       console.log("");
-      let query = "SELECT first_name as 'First Name', last_name as 'Last Name', department.name as 'Department' FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
+      let query = "SELECT employee.first_name as 'First Name', employee.last_name as 'Last Name', department.name as 'Department' FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY department.id;";
       const rows = await db.query(query);
       console.table(rows);
 }
@@ -163,8 +163,8 @@ const updateEmployeeRole = async (employeeInfo) => {
 
 const viewAllEmployeesByDepartment2 = async () => {
       const departmentChoice = await getEmployeesByDept();
-      const deptID = await getDepartmentId(departmentChoice)
-      let query = "SELECT first_name as 'First Name', last_name as 'Last Name', department.name as 'Department' FROM employee INNER JOIN role ON role_id = role.id INNER JOIN department ON department_id = department.id WHERE department.id = ?;";
+      const deptID = await getDepartmentId(departmentChoice.departmentName)
+      let query = "SELECT first_name as 'First Name', last_name as 'Last Name', department.name as 'Department' FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE department.id = ?;";
       let args = [deptID];
       const rows = await db.query(query, args);
       console.table(rows);
