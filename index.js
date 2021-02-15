@@ -12,7 +12,7 @@ const db = new Database({
       user: 'root',
 
       // Be sure to update with your own MySQL password!
-      password: 'Chuff64)hans',
+      password: 'password',
       database: 'employee_db',
 })
 
